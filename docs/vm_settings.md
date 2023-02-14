@@ -6,14 +6,10 @@
   - `username ALL=(ALL) NOPASSWD:ALL` 추가
   - `NOPASSWD` 로 `sudo` 커맨드 사용 시 패스워드를 입력하지 않아도 된다.
 - `apt-get update`
-- `apt-get install -y git`
-- `apt-get install -y vim`
-- `apt-get install -y sudo`
-- `apt-get install -y curl`
-- `apt-get install -y fonts-nanum`
-  - 한글 폰트 설치
+- `apt-get install -y git vim sudo curl fonts-nanum`
+  - fonts-nanum : 한글 폰트 설치
 ## GUI 테마 Windows95 로 만들기
-1. debian 설치 시 GUI 환경을 `xfec4` 로 선택한다.
+1. debian 설치 시 GUI 환경을 _xfec4_ 로 선택한다.
     - 이미 다른 툴을 설치했다면
     - `sudo apt update && sudo apt upgrade`
     - `sudo apt install tasksel -y`

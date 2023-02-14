@@ -1,0 +1,8 @@
+version: 3
+
+networks:
+  inception:
+    driver: bridge
+volumes:
+  wpdata:
+  wp_mariadb:
