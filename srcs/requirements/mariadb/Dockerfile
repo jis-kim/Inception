@@ -16,12 +16,15 @@ FROM alpine:$VERSION
 # 어디에 출력되는 거임...?
 RUN set -ex; /bin/sh; ls; apk update; echo hihi;
 
-RUN whoami; apk add mysql mysql-client; ps;
+RUN whoami; apk add mariadb mariadb-client; ps;
 
 ENV LANG C.UTF-8
 
 COPY *.txt /home/login/data/
 
-EXPOSE 3306
+RUN whoami
+RUN which mariadb mariadbd
 
-#CMD ["mariadbd"]
+EXPOSE 3306/TCP
+
+CMD ["mariadbd"]
