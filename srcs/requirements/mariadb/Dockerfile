@@ -10,8 +10,8 @@
 # 얘네는 compose 인 것 같은데?
 # - port 3306 (default) 연결
 # - volume 연결
-
-FROM alpine:latest
+ARG VERSION=latest
+FROM alpine:$VERSION
 
 # 어디에 출력되는 거임...?
 RUN set -ex; /bin/sh; ls; apk update; echo hihi;
@@ -20,5 +20,8 @@ RUN whoami; apk add mysql mysql-client; ps;
 
 ENV LANG C.UTF-8
 
+COPY *.txt /home/login/data/
+
 EXPOSE 3306
-CMD ["mariadbd"]
+
+#CMD ["mariadbd"]
