@@ -10,21 +10,24 @@
 # 얘네는 compose 인 것 같은데?
 # - port 3306 (default) 연결
 # - volume 연결
+# FROM 에만 적용되는 ARG
 ARG VERSION=latest
 FROM alpine:$VERSION
 
 # 어디에 출력되는 거임...?
 RUN set -ex; /bin/sh; ls; apk update; echo hihi;
 
-RUN whoami; apk add mariadb mariadb-client; ps;
+#RUN whoami; apk add mariadb mariadb-client; ps;
 
 ENV LANG C.UTF-8
 
 COPY *.txt /home/login/data/
 
-RUN whoami
-RUN which mariadb mariadbd
+ENTRYPOINT [ "/bin/sh" ]
+
+RUN whoami; ps;
+#RUN which mariadb
 
 EXPOSE 3306/TCP
 
-CMD ["mariadbd"]
+#CMD ["mariadbd"]
