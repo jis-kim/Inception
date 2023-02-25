@@ -30,8 +30,9 @@ RUN  set -eux; ls -al /var/lib; \
 VOLUME /var/lib/mysql
 
 COPY docker-entrypoint.sh /usr/local/bin/
-USER mysql
-RUN whoami
-ENTRYPOINT ["mariadbd"]
+#USER mysql
+#RUN whoami
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD [mariadbd]
 
 EXPOSE 3306
