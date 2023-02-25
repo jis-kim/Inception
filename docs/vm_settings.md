@@ -20,3 +20,9 @@
 3. `reboot`
 4. 적용된 모습
     ![img](./pics/debian95.png)
+## oh-my-bash 설치
+1. `sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"`
+2. Chicago95 theme 이식
+    - `Chicago95/Extras/Chicago95.zsh-theme` 파일을 `~/.oh-my-bash/themes/Chicago95/Chicago95.theme.sh` 로 이동 && 이름 변경
+3. `~/.bashrc` 수정
+    - `theme="Chicago95"`
