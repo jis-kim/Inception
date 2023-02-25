@@ -1,17 +1,15 @@
 FROM alpine:latest
 RUN set -eux; \
     apk update; \
-    apk add --no-cache vim mariadb mariadb-client; \
+    apk add --no-cache  su-exec vim mariadb mariadb-client; \
     rm -rf /var/cache/apk/*; \
     ls -la /var/lib/mysql; \
-    ls -la /var/lib;
-
-RUN set -eux; \
+    ls -la /var/lib; \
+    set -eux; \
     rm -rf /var/lib/apk/lists/*; \
     rm -rf /var/lib/mysql; \
-    mkdir -p /var/lib/mysql /var/run/mysqld;
-
-RUN  set -eux; ls -al /var/lib; \
+    mkdir -p /var/lib/mysql /var/run/mysqld; \
+    ls -al /var/lib; \
     chown -R mysql:mysql /var/lib/mysql /var/run/mysqld; \
     ls -la /var/lib; \
     ls -la /var/run; \
@@ -30,9 +28,12 @@ RUN  set -eux; ls -al /var/lib; \
 VOLUME /var/lib/mysql
 
 COPY docker-entrypoint.sh /usr/local/bin/
+#RUN chmod 777 /usr/local/bin/docker-entrypoint.sh
 #USER mysql
 #RUN whoami
+
+#ENTRYPOINT ["/bin/sh"]
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD [mariadbd]
+CMD ["mariadbd"]
 
 EXPOSE 3306

@@ -1,6 +1,7 @@
 #!/bin/bash
 set -eo pipefail
 shopt -s nullglob
+# (nullglob) If set, Bash allows filename patterns which match no files to expand to a null string, rather than themselves.
 
 # logging functions
 mysql_log() {
@@ -183,6 +184,7 @@ docker_create_db_directories() {
 
 	# TODO other directories that are used by default? like /var/lib/mysql-files
 	# see https://github.com/docker-library/mysql/issues/562
+	# 왜 만드니
 	mkdir -p "$DATADIR"
 
   # root
@@ -507,14 +509,15 @@ _main() {
 	#--help-verbose 갈겨보고 안되면 포기함.
 		mysql_check_config "$@"
 		# Load various environment variables
-		# NOTE: 파일에서 가져옴. -e 로 된 것도 여기서 가져오나?..... 몰러......
+		# NOTE: 파일에서 가져옴.
 		docker_setup_env "$@"
+		# NOTE : diretory, socket 찾아서 chown
 		docker_create_db_directories
 
 		# If container is started as root user, restart as dedicated mysql user
 		if [ "$(id -u)" = "0" ]; then
 			mysql_note "Switching to dedicated user 'mysql'"
-			exec gosu mysql "${BASH_SOURCE[0]}" "$@"
+			exec gosu mysql "${BASH_SOURCE[0]}" "$@" # 프로그램명
 		fi
 
 		# there's no database, so it needs to be initialized
