@@ -1,9 +1,6 @@
 # TODO : write mariadb Docker file
 # - word press 의 db가 되어야 한다.
 # .env 를 이용한 환경변수 설정
-# db 사용자가 두 명.
-# 1. administrator (사용자 명이 admin, Admin 등이면 안된다.)
-# 2. 일반 유저.
 # 볼륨 설정 위치 : /home/login/data 폴더.
 
 
@@ -14,20 +11,41 @@
 ARG VERSION=latest
 FROM alpine:$VERSION
 
-# 어디에 출력되는 거임...?
-RUN set -ex; /bin/sh; ls; apk update; echo hihi;
+RUN set -eux; \
+    apk update; \
+    apk add --no-cache su-exec vim mariadb mariadb-client; \
+    rm -rf /var/cache/apk/*; \
+    ls -la /var/lib/mysql; \
+    ls -la /var/lib;
+# FIXME : 나중에  합칠거임
+RUN set -eux; \
+    rm -rf /var/lib/apk/lists/*; \
+    rm -rf /var/lib/mysql; \
+    mkdir -p /var/lib/mysql /var/run/mysqld; \
+    ls -al /var/lib; \
+    chown -R mysql:mysql /var/lib/mysql /var/run/mysqld; \
+    ls -la /var/lib; \
+    ls -la /var/run/mysqld; \
+    # for every users to access
+    chmod 777 /var/run/mysqld;
 
-#RUN whoami; apk add mariadb mariadb-client; ps;
+# comment out a few problematic configuration values
+#RUN  set -ex; find /etc/mysql/ -name '*.cnf' -print0 ; \
+		  #| xargs -0 grep -lZE '^(bind-address|log|user\s)' \
+		  #| xargs -rt -0 sed -Ei 's/^(bind-address|log|user\s)/#&/'; \
+    # don't reverse lookup hostnames, they are usually another container
+	#printf "[mariadb]\nhost-cache-size=0\nskip-name-resolve\n" | tee /etc/mysql/mariadb.conf.d/05-skipcache.cnf; \
+    #if [ -L /etc/mysql/my.cnf ]; then \
+	#	sed -i -e '/includedir/ {N;s/\(.*\)\n\(.*\)/\n\2\n\1/}' /etc/mysql/mariadb.cnf; \
+	#fi
 
-ENV LANG C.UTF-8
+# NOTE : run 할 때 volume 이름을 지정하지 않으면 unname volume 이 생성된다.
+VOLUME /var/lib/mysql
 
-COPY *.txt /home/login/data/
+COPY docker-entrypoint.sh /usr/local/bin/
 
-ENTRYPOINT [ "/bin/sh" ]
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["mariadbd"]
+# CMD 는 run 할 때 적으면 바뀌는!
 
-RUN whoami; ps;
-#RUN which mariadb
-
-EXPOSE 3306/TCP
-
-#CMD ["mariadbd"]
+EXPOSE 3306

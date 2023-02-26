@@ -1,7 +1,7 @@
 # Settings for the VM
 - os : debian-11
 ## 패키지 설치
-`sudo su -` 로 루트 계정에서 진행한다.
+`su -` 로 루트 계정에서 진행한다.
 - `visudo`
   - `username ALL=(ALL) NOPASSWD:ALL` 추가
   - `NOPASSWD` 로 `sudo` 커맨드 사용 시 패스워드를 입력하지 않아도 된다.

@@ -1,4 +1,28 @@
-version: 3
+version: "3.0" # deprecated
+
+services:
+  mariadb:
+    image: my-mariadb
+    build:
+      context: ./requirements/mariadb
+    networks:
+      - inception
+    volumes:
+      - wpdata:/var/lib/mysql
+    ports:
+      - 3306:3306
+    env_file:
+      - ./requirements/mariadb/.env
+  #wordpress:
+  #  image: my-wordpress
+  #  build:
+  #    context: ./requirements/wordpress
+  #  depends-on:
+  #    - mariadb
+  #  networks:
+  #    - inception
+  #  volumes:
+  #    - wpdata:/var/www/html
 
 networks:
   inception:

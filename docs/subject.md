@@ -137,7 +137,7 @@ Bonus list:
 - WordPress website 의 cache 를 적절히 관리하기 위해 **redis cache** 를 설정해야 한다.
 - WordPress website 의 볼륨을 가리키는 **FTP server** 를 설정해야 한다.
 - PHP 를 제외한 언어를 선택해서 간단한 **static website** 를 만들어라. 예를들어, 이력서를 보여주는 사이트나 쇼케이스 사이트..
-- `**Adminer**` 를 설정해야 한다.
+- **`Adminer`** 를 설정해야 한다.
 - **유용하다고 생각되는 서비스를 선택하여 설정**해야 한다. 디펜스에서 당신의 선택을 정당화해야 한다.
 
 > ℹ️ bonus part 를 완료하기 위해, extra service 를 설정할 수 있다. 이 경우 필요에 맞게 더 많은 포트를 열 수 있다.
