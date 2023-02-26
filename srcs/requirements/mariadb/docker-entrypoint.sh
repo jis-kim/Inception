@@ -10,7 +10,10 @@ print_configs() {
 }
 
 check_minimum_env() {
-  if [ -z $MARIADB_ROOT_PASSWORD ] && [ -z $MARIADB)]
+  if [ -n $MYSQL_ROOT_PASSWORD ] && [ -n $MYSQL_USER) && [ -n $MYSQL_PASSWORD ]; then
+    echo >&2 'error: database is uninitialized and password option is not specified '
+    exit 1
+  fi
 }
 
 #if [ "${1:0:1}" = '-' ]; then
@@ -28,6 +31,8 @@ if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ]; then
   fi
 
   check_minimum_env
+
+  # TODO : setting mysql users
 
   mysql_install_db --datadir="/var/lib/mysql/" --auth-root-socket-user=mysql
 

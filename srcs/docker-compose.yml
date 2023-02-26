@@ -8,11 +8,12 @@ services:
     networks:
       - inception
     volumes:
+    # TODO : volume change to bind mount
       - wpdata:/var/lib/mysql
     ports:
       - 3306:3306
     env_file:
-      - ./requirements/mariadb/.env
+      - ./.env
   #wordpress:
   #  image: my-wordpress
   #  build:
