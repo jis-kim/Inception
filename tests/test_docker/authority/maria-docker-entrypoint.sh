@@ -315,6 +315,7 @@ docker_setup_db() {
 		# ref "read -d ''", no, we don't care if read finds a terminating character in this heredoc
 		# https://unix.stackexchange.com/questions/265149/why-is-set-o-errexit-breaking-this-read-heredoc-expression/265151#265151
 		if [ -n "$MARIADB_ROOT_PASSWORD_HASH" ]; then
+			# r -> \ 를 문자 그대로 인식. d -> delimiter 빈칸으로 함으로써 에러 방지
 			read -r -d '' rootCreate <<-EOSQL || true
 				CREATE USER 'root'@'${MARIADB_ROOT_HOST}' IDENTIFIED BY PASSWORD '${MARIADB_ROOT_PASSWORD_HASH}' ;
 				GRANT ALL ON *.* TO 'root'@'${MARIADB_ROOT_HOST}' WITH GRANT OPTION ;
