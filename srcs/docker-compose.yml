@@ -1,4 +1,4 @@
-version: "3.0" # deprecated
+#version: "3.0" # deprecated
 
 services:
   mariadb:
@@ -9,7 +9,7 @@ services:
       - inception
     volumes:
     # TODO : volume change to bind mount
-      - wpdata:/var/lib/mysql
+      - ${MYSQL_VOLUME_PATH}:/var/lib/mysql
     ports:
       - 3306:3306
     env_file:

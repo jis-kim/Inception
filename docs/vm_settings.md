@@ -53,3 +53,40 @@ refs : [How do I enable copy and paste between VirtualBox and host?](https://lin
 5. theme file 삭제 (Optional)
     - `sudo rm -rf ~/Chicago95`
 이상하면? Chicago 95 reinstall 을 갈겨보자..
+
+## Docker 설치
+1. `apt` 가 HTTPS 를 지원하도록 패키지 설치
+``` bash
+sudo apt-get update
+sudo apt-get -y install ca-certificates curl gnupg lsb-release
+```
+- 위 과정 이후 이미 설치되어 있었음.
+
+2. Docker GPG key 추가
+``` bash
+sudo mkdir -m 0755 -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+```
+
+3. set up repository
+``` bash
+echo \
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null`
+```
+4. 권한 설정
+``` bash
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+sudo apt-get update
+```
+
+5. 설치
+``` bash
+sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+6. docker group 에 사용자 추가
+``` bash
+sudo usermod -aG docker $USER
+newgrp docker
+```

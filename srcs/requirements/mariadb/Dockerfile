@@ -15,19 +15,8 @@ RUN set -eux; \
     apk update; \
     apk add --no-cache su-exec vim mariadb mariadb-client; \
     rm -rf /var/cache/apk/*; \
-    ls -la /var/lib/mysql; \
-    ls -la /var/lib;
-# FIXME : 나중에  합칠거임
-RUN set -eux; \
-    rm -rf /var/lib/apk/lists/*; \
-    rm -rf /var/lib/mysql; \
-    mkdir -p /var/lib/mysql /var/run/mysqld; \
-    ls -al /var/lib; \
-    chown -R mysql:mysql /var/lib/mysql /var/run/mysqld; \
-    ls -la /var/lib; \
-    ls -la /var/run/mysqld; \
-    # for every users to access
-    chmod 777 /var/run/mysqld;
+    rm -rf /var/lib/apk/lists/*;
+    # 왜 chown 안됐지?
 
 # comment out a few problematic configuration values
 #RUN  set -ex; find /etc/mysql/ -name '*.cnf' -print0 ; \

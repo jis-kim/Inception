@@ -26,7 +26,8 @@ all :
 
 .PHONY : clean
 clean :
-	@$(DOCKER_COMPOSE) $(DOWN) --remove-orphans
+	$(DOCKER_COMPOSE) $(DOWN) --remove-orphans
+	sudo rm -rf /home/$(USER)/data
 	@echo $(BOLD)$(L_RED) 🗑️ Removed all docker composed files 📁$(RESET)
 
 .PHONY : fclean
