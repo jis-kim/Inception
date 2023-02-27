@@ -8,6 +8,27 @@
 - `apt-get update`
 - `apt-get install -y git vim sudo curl fonts-nanum`
   - fonts-nanum : 한글 폰트 설치
+
+## 호스트 머신과 클립보드 공유
+
+refs : [How do I enable copy and paste between VirtualBox and host?](https://linuxhint.com/enable-copy-paste-virtualbox-host/)
+
+1. Insert Guest Addition CD Image
+    - guest addition 을 이용한 기능이므로 os 설치 단계에서 추가할 수 있어 보이지만 테스트 해보지 않았음.
+    - 설치 다시 할 때 테스트 해보는 것으로..
+
+    ```bash
+    $ sudo apt install build-essential dkms linux-headers-$(uname -r)
+    ```
+    .. 해당 방식이 작동하지 않는 경우 직접 cdrom 마운트 후 스크립트로 설치한다.
+    - `sudo mkdir -p /mnt/cdrom`
+    - `sudo mount /dev/cdrom /mnt/cdrom`
+    - `sudo /mnt/cdrom/VBoxLinuxAdditions.run`
+2. 머신 설정 변경
+    ![img](./pics/clipboard_sharing.png)
+    - Shared Clipboard 를 Bidirectional 으로 변경한다.
+3. reboot
+
 ## GUI 테마 Windows95 로 만들기
 1. debian 설치 시 GUI 환경을 _xfec4_ 로 선택한다.
     - 이미 다른 툴을 설치했다면
@@ -24,5 +45,11 @@
 1. `sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"`
 2. Chicago95 theme 이식
     - `Chicago95/Extras/Chicago95.zsh-theme` 파일을 `~/.oh-my-bash/themes/Chicago95/Chicago95.theme.sh` 로 이동 && 이름 변경
+    - `mkdir -p ~/.oh-my-bash/themes/Chicago95`
+    - `cp -r ~/Chicago95/Extras/Chicago95.zsh-theme ~/.oh-my-bash/themes/Chicago95/Chicago95.theme.sh`
 3. `~/.bashrc` 수정
-    - `theme="Chicago95"`
+    - `OSH_THEME="Chicago95"`
+4. `source ~/.bashrc`
+5. theme file 삭제 (Optional)
+    - `sudo rm -rf ~/Chicago95`
+이상하면? Chicago 95 reinstall 을 갈겨보자..
