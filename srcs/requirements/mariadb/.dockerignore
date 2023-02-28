@@ -1,4 +1,2 @@
 *.txt
-!a*.txt
-ac.txt
-
+!docker-entrypoint.txt

@@ -16,24 +16,11 @@ RUN set -eux; \
     ls -la /var/run/mysqld; \
     chmod 777 /var/run/mysqld;
 
-# comment out a few problematic configuration values
-#RUN  set -ex; find /etc/mysql/ -name '*.cnf' -print0 ; \
-		  #| xargs -0 grep -lZE '^(bind-address|log|user\s)' \
-		  #| xargs -rt -0 sed -Ei 's/^(bind-address|log|user\s)/#&/'; \
-    # don't reverse lookup hostnames, they are usually another container
-	#printf "[mariadb]\nhost-cache-size=0\nskip-name-resolve\n" | tee /etc/mysql/mariadb.conf.d/05-skipcache.cnf; \
-    #if [ -L /etc/mysql/my.cnf ]; then \
-	#	sed -i -e '/includedir/ {N;s/\(.*\)\n\(.*\)/\n\2\n\1/}' /etc/mysql/mariadb.cnf; \
-	#fi
-
 VOLUME /var/lib/mysql
 
 COPY docker-entrypoint.sh /usr/local/bin/
 #RUN chmod 777 /usr/local/bin/docker-entrypoint.sh
-#USER mysql
-#RUN whoami
 
-#ENTRYPOINT ["/bin/sh"]
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["mariadbd"]
 # CMD 는 run 할 때 적으면 바뀌는;;

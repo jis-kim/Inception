@@ -34,7 +34,6 @@ check_minimum_env() {
 
 # run command as root@localhost
 exec_client() {
-  whoami
   mariadb -umysql "$@"
 }
 
@@ -71,10 +70,6 @@ run_server_for_init() {
 #stop_server_for_init() {
 #}
 
-# $1 : --
-#set_without_root() {
-#  exec_client --dont-use-mysql-root-password
-#}
 
 #sql_escape_string_literal() {
 #  local newline=$'\n' # real newline
@@ -92,17 +87,12 @@ setup_db() {
   read -r -d '' rootCreate <<-EOSQL || true
     CREATE USER 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}' ;
     GRANT ALL ON *.* TO 'root'@'%' WITH GRANT OPTION ;
-	EOSQL
-
-  local userCreate=
-  read -r -d '' userCrate <<-EOSQL || true
     CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}' ;
     GRANT ALL ON *.* TO '${MYSQL_USER}'@'%' WITH GRANT OPTION ;
 	EOSQL
 
   exec_client --database=mysql --binary-mode <<-EOSQL
     ${rootCreate}
-    ${userCreate}
 	EOSQL
 }
 
