@@ -1,8 +1,5 @@
 # TODO : write mariadb Docker file
 # - word press 의 db가 되어야 한다.
-# .env 를 이용한 환경변수 설정
-# 볼륨 설정 위치 : /home/login/data 폴더.
-
 
 # 얘네는 compose 인 것 같은데?
 # - port 3306 (default) 연결
@@ -16,7 +13,6 @@ RUN set -eux; \
     apk add --no-cache su-exec vim mariadb mariadb-client; \
     rm -rf /var/cache/apk/*; \
     rm -rf /var/lib/apk/lists/*;
-    # 왜 chown 안됐지?
 
 # comment out a few problematic configuration values
 #RUN  set -ex; find /etc/mysql/ -name '*.cnf' -print0 ; \

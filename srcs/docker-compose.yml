@@ -8,7 +8,6 @@ services:
     networks:
       - inception
     volumes:
-    # TODO : volume change to bind mount
       - ${MYSQL_VOLUME_PATH}:/var/lib/mysql
     ports:
       - 3306:3306
@@ -18,16 +17,25 @@ services:
   #  image: my-wordpress
   #  build:
   #    context: ./requirements/wordpress
-  #  depends-on:
+  #  depends_on:
   #    - mariadb
   #  networks:
   #    - inception
   #  volumes:
   #    - wpdata:/var/www/html
 
+  #marimari:
+  #  image: my-mariadb
+  #  depends_on:
+  #    - mariadb
+  #  networks:
+  #    - inception
+  #  env_file:
+  #    - ./.env
+  #  command: /bin/sh
+
 networks:
   inception:
     driver: bridge
 volumes:
   wpdata:
-  wp_mariadb:
