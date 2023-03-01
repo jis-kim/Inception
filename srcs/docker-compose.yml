@@ -8,21 +8,23 @@ services:
     networks:
       - inception
     volumes:
-      - ${MYSQL_VOLUME_PATH}:/var/lib/mysql
+      - ${VOLUME_PATH}/mariadb:/var/lib/mysql
     ports:
       - 3306:3306
     env_file:
       - ./.env
-  #wordpress:
-  #  image: my-wordpress
-  #  build:
-  #    context: ./requirements/wordpress
-  #  depends_on:
-  #    - mariadb
-  #  networks:
-  #    - inception
-  #  volumes:
-  #    - wpdata:/var/www/html
+  wordpress:
+    image: my-wordpress
+    build:
+      context: ./requirements/wordpress
+    depends_on:
+      - mariadb
+    networks:
+      - inception
+    ports:
+      - 9000:9000
+    volumes:
+      - ${VOLUME_PATH}/wordpress:/var/www/html
 
   #marimari:
   #  image: my-mariadb
