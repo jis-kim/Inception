@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  mys:
+    image: mysql:5.7
+    networks:
+      - newnet
+    volumes:
+      - ./mysqldata:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+  wpwp:
+    image: wordpress
+    networks:
+      - newnet
+    volumes:
+      - ./wpdata:/var/www/html
+    ports:
+      - 1111:80
+    environment:
+      WORDPRESS_DB_HOST: mys
+      WORDPRESS_DB_USER: test
+      WORDPRESS_DB_PASSWORD: test
+      WORDPRESS_DB_NAME: test
+networks:
+  newnet:
+    driver: bridge
+volumes:
+  mysqldata:
+  wpdata:
