@@ -5,7 +5,7 @@
 # - port 3306 (default) 연결
 # - volume 연결
 # FROM 에만 적용되는 ARG
-ARG VERSION=latest
+ARG VERSION=3.15
 FROM alpine:$VERSION
 
 RUN set -eux; \
@@ -29,8 +29,9 @@ VOLUME /var/lib/mysql
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
+EXPOSE 3306
+
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["mariadbd"]
 # CMD 는 run 할 때 적으면 바뀌는!
 
-EXPOSE 3306

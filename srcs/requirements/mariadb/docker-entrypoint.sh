@@ -77,9 +77,10 @@ run_server_for_init() {
 setup_db() {
   run_server_for_init "$@"
 
-  local rootCreate=
+  local createUsers=
   # true 로 종료 방지
-  read -r -d '' rootCreate <<-EOSQL || true
+  # heredoc 은 envriotment variable 을 인식하지 못하므로 read(stdin 에서 한 줄 읽음) 로 한 번 변환.
+  read -r -d '' createUsers <<-EOSQL || true
     CREATE USER 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}' ;
     GRANT ALL ON *.* TO 'root'@'%' WITH GRANT OPTION ;
     CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}' ;
@@ -87,7 +88,7 @@ setup_db() {
 	EOSQL
 
   exec_client --database=mysql --binary-mode <<-EOSQL
-    ${rootCreate}
+    ${createUsers}
 	EOSQL
 }
 
@@ -138,7 +139,7 @@ fi
 # 1. skip-networking=false
 
 if [ "$1" = "mariadbd" ] ; then
-  set -- $@  "--skip-networking=false"
+  set -- $@  '--skip-networking=false'
 fi
 
 exec "$@"

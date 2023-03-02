@@ -68,7 +68,7 @@ perfomance 문제 때문에, 컨테이너는 Alpine 혹은 Debian 의 두 번째
 
 예상 directory 구조의 예시는 다음과 같다. :
 
-```cpp
+```bash
 $> ls -alR
 total XX
 drwxrwxr-x 3 wil wil 4096 avril 42 20:42 .

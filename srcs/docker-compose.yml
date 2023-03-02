@@ -21,8 +21,6 @@ services:
       - mariadb
     networks:
       - inception
-    ports:
-      - 9000:9000
     volumes:
       - ${VOLUME_PATH}/wordpress:/var/www/html
 
