@@ -9,7 +9,6 @@ RUN set -eux; \
     rm -rf /var/lib/apk/lists/*; \
     cat /etc/nginx/nginx.conf;
 
-
 VOLUME /var/www/html
 
-ENTRYPOINT [ "nginx" ]
+ENTRYPOINT [ "nginx", "-g", "daemon off;" ]

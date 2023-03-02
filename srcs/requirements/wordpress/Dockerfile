@@ -8,8 +8,6 @@ RUN set -eux; \
     cat /etc/apk/repositories; \
     apk update; \
     apk add --no-cache vim php8-fpm \
-    php \
-    php8-opcache \
     php8-common \
     php8-session \
     php8-iconv \
@@ -35,17 +33,15 @@ RUN set -eux; \
 
 # 흐으음...흐으음...흐으음...흐으음...
 RUN set -eux; \
-    mkdir -p /var/www/html/; \
-    cd /var/www/html/; \
     wget https://wordpress.org/wordpress-6.1.1.tar.gz; \
-    tar -xzvf wordpress-6.1.1.tar.gz; \
-    wget "https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"; \
-    php wp-cli.phar --info; \
-    chmod +x wp-cli.phar; \
-    mv wp-cli.phar /usr/local/bin/wp; \
-    wp --info;
+    tar -xzvf wordpress-6.1.1.tar.gz;
+    #wget "https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"; \
+    #php wp-cli.phar --info; \
+    #chmod +x wp-cli.phar; \
+    #mv wp-cli.phar /usr/local/bin/wp; \
+    #wp --info;
 
 VOLUME /wordpress
 
-ENTRYPOINT [ "/bin/sh" ]
+EXPOSE 9000
 #CMD

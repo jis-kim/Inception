@@ -5,14 +5,16 @@ services:
     image: my-mariadb
     build:
       context: ./requirements/mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     networks:
       - inception
     volumes:
       - ${VOLUME_PATH}/mariadb:/var/lib/mysql
-    ports:
-      - 3306:3306
-    env_file:
-      - ./.env
+    expose:
+      - "3306"
   wordpress:
     image: my-wordpress
     build:
@@ -22,20 +24,23 @@ services:
     networks:
       - inception
     volumes:
+      - ${VOLUME_PATH}/wordpress:/wordpress
+    expose:
+      - "9000"
+    command: sleep infinity
+  nginx:
+    image: wordpress
+    build:
+      context: ./requirements/nginx
+    depends_on:
+      - mariadb
+    ports:
+      - 80:80
+    networks:
+      - inception
+    volumes:
       - ${VOLUME_PATH}/wordpress:/var/www/html
-
-  #marimari:
-  #  image: my-mariadb
-  #  depends_on:
-  #    - mariadb
-  #  networks:
-  #    - inception
-  #  env_file:
-  #    - ./.env
-  #  command: /bin/sh
 
 networks:
   inception:
     driver: bridge
-volumes:
-  wpdata:
