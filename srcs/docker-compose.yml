@@ -27,9 +27,8 @@ services:
       - ${VOLUME_PATH}/wordpress:/wordpress
     expose:
       - "9000"
-    command: sleep infinity
   nginx:
-    image: wordpress
+    image: my-nginx
     build:
       context: ./requirements/nginx
     depends_on:

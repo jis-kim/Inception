@@ -1,19 +1,18 @@
 # Makefile for docker-compose
-
 # command list
-COMPOSE = docker compose
+DOCKER_COMPOSE = docker compose
 
-UP = up
-DOWN = down
-STOP = stop
+COMPOSE_UP = up
+COMPOSE_DOWN = down
+COMPOSE_STOP = stop
+COMPOSE_BUILD = build
 
-BUILD_FLAGS = -progress=plain
+BUILD_FLAGS = --progress=plain
 NO_CACHE = --no-cache
 PRE_BUILD = --build
 
-BUILD = docker compose $(BUILD_FLAGS)
-DOCKER_COMPOSE = docker compose
-
+SRCS_DIR = ./srcs
+COMPOSE_FILE = $(SRCS_DIR)/docker-compose.yml
 
 NAME = inception
 
@@ -22,27 +21,35 @@ COMPILE_MSG	= @echo $(BOLD)$(L_PURPLE) 📣 $(NAME) Compiled 🥳$(RESET)
 
 .PHONY : all
 all :
-	$(DOCKER_COMPOSE) $(UP) $(PRE_BUILD)
+	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) $(COMPOSE_UP) $(PRE_BUILD)
 
 .PHONY : clean
 clean :
-	$(DOCKER_COMPOSE) $(DOWN) --remove-orphans
+	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) $(COMPOSE_DOWN) --remove-orphans
 	sudo rm -rf /home/$(USER)/data
-	@echo $(BOLD)$(L_RED) 🗑️ Removed all docker composed files 📁$(RESET)
+	@echo $(BOLD)$(L_RED) 🗑️ Removed all docker composed containers$(RESET)
 
 .PHONY : fclean
 fclean : clean
-	@$(DOCKER_COMPOSE) $(STOP)
+	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) $(COMPOSE_STOP)
 	@echo $(BOLD)$(L_PURPLE) 🗑️ stopped running containers! 📚$(RESET)
 
 .PHONY : re
 re : fclean
 	@make all
 
-.PHONY : debug
-debug : fclean
-	@make DEBUG=1
+build :
+	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) $(COMPOSE_BUILD) $(BUILD_FLAGS)
 
+.PHONY : ps
+ps :
+	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) ps
+
+exec :
+	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) exec $(service) /bin/sh
+
+top :
+	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) top $(service)
 
 ######################### Color #########################
 GREEN="\033[32m"

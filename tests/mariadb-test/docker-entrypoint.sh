@@ -1,5 +1,5 @@
 #!/bin/sh
-set -xuo pipefail
+set -exuo pipefail
 
 #_verboseHelpArgs=(
 #  --verbose --help

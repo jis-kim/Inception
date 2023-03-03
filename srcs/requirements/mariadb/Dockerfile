@@ -25,10 +25,10 @@ RUN set -eux; \
 	#fi
 
 # NOTE : run 할 때 volume 이름을 지정하지 않으면 unname volume 이 생성된다.
-VOLUME /var/lib/mysql
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
+VOLUME /var/lib/mysql
 EXPOSE 3306
 
 ENTRYPOINT ["docker-entrypoint.sh"]

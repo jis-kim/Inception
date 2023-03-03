@@ -10,5 +10,6 @@ RUN set -eux; \
     cat /etc/nginx/nginx.conf;
 
 VOLUME /var/www/html
+COPY default.conf /etc/nginx/http.d/default.conf
 
 ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
