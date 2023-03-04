@@ -21,12 +21,12 @@ COMPILE_MSG	= @echo $(BOLD)$(L_PURPLE) 📣 $(NAME) Compiled 🥳$(RESET)
 
 .PHONY : all
 all :
-	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) $(COMPOSE_UP) $(PRE_BUILD)
+	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) $(COMPOSE_UP) -d $(PRE_BUILD)
 
 .PHONY : clean
 clean :
 	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) $(COMPOSE_DOWN) --remove-orphans
-	sudo rm -rf /home/$(USER)/data
+	@sudo rm -rf $(HOME)/data
 	@echo $(BOLD)$(L_RED) 🗑️ Removed all docker composed containers$(RESET)
 
 .PHONY : fclean
@@ -46,10 +46,13 @@ ps :
 	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) ps
 
 exec :
-	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) exec $(service) /bin/sh
+	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) exec $(S) /bin/sh
+
+logs :
+	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) logs $(S)
 
 top :
-	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) top $(service)
+	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) top $(S)
 
 ######################### Color #########################
 GREEN="\033[32m"

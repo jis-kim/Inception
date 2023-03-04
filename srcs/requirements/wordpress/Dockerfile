@@ -43,6 +43,8 @@ RUN set -eux; \
     mv wp-cli.phar /usr/local/bin/wp;
 
 COPY docker-entrypoint.sh /usr/local/bin/
+COPY www.conf /etc/php8/php-fpm.d/www.conf
+
 VOLUME /wordpress
 EXPOSE 9000
 

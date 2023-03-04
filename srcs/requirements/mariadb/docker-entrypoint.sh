@@ -1,12 +1,8 @@
 #!/bin/sh
-set -exuo pipefail
+set -euo pipefail # -x for debugging
 
 logger_info() {
   echo "[$(date +'%Y-%m-%d %H:%M:%S')] [INFO] $@"
-}
-
-logger_warn() {
-  echo "[$(date +'%Y-%m-%d %H:%M:%S')] [WARN] $@" >&2
 }
 
 logger_error() {
