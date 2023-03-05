@@ -9,16 +9,20 @@ RUN set -eux; \
     apk update; \
     apk add --no-cache vim \
     php8 \
+    php8-phar \
     php8-fpm \
     php8-common \
     php8-session \
     php8-iconv \
+    # wp 필수
     php8-json \
     php8-gd \
     php8-curl \
     php8-xml \
+    # wp 필수
     php8-mysqli \
     php8-imap \
+    # mysqli or pdo 선택
     php8-pdo \
     php8-pdo_mysql \
     php8-soap \
@@ -30,17 +34,18 @@ RUN set -eux; \
     php8-ctype \
     php8-dom \
     php8-simplexml; \
+    ln -s /usr/bin/php8 /usr/bin/php; \
     rm -rf /var/cache/apk/*; \
     rm -rf /var/lib/apk/lists/*;
 
 RUN set -eux; \
-    wget https://wordpress.org/wordpress-6.1.1.tar.gz; \
+    #wget https://wordpress.org/wordpress-6.1.1.tar.gz; \
     wget "https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"; \
-    php8 -v; \
-    which php8; \
-    #php8 wp-cli.phar --info; \
+    php --version \
+    php8 wp-cli.phar --info; \
     chmod +x wp-cli.phar; \
-    mv wp-cli.phar /usr/local/bin/wp;
+    mv wp-cli.phar /usr/local/bin/wp; \
+    wp --info;
 
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY www.conf /etc/php8/php-fpm.d/www.conf
