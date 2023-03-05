@@ -24,7 +24,7 @@ services:
     networks:
       - inception
     volumes:
-      - ${VOLUME_PATH}/wordpress:/var/www/html
+      - ${VOLUME_PATH}/wordpress:/wordpress
     expose:
       - "9000"
   nginx:
