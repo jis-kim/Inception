@@ -81,6 +81,7 @@ setup_db() {
     GRANT ALL ON *.* TO 'root'@'%' WITH GRANT OPTION ;
     CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}' ;
     GRANT ALL ON *.* TO '${MYSQL_USER}'@'%' WITH GRANT OPTION ;
+    CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE} ;
 	EOSQL
 
   exec_client --database=mysql --binary-mode <<-EOSQL
@@ -114,7 +115,7 @@ if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ]; then
     # /var/run/mysqld 의 권한만 바꾼다.
     find "${SOCKET%/*}" -maxdepth 0 \! -user mysql -exec chown mysql: '{}' \;
     # chown -R mysql:mysql ${DATADIR} /var/run/mysqld
-    # 얘는 안에 있는 모든 file 을 재귀적으로 권한바꿈.
+    # 얘는 안에 있는 모든 file 을 재귀적으로(-R) 권한바꿈.
     # user를 mysql 로 변경하여 현재 스크립트를 재실행한다.
     exec su-exec mysql "$0" "$@"
   fi
@@ -122,18 +123,16 @@ if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ]; then
   check_minimum_env
 
   if [ -z $DATABASE_ALREADY_EXISTS ]; then
-    # mysql user 를 auth-root-socket-user 로 생성해서 바로 접속가능. (아마도 ^^)
+    # mysql user 를 auth-root-socket-user 로 생성해서 바로 접속가능.
     mysql_install_db --datadir="${DATADIR}"\
      '--skip-test-db' '--auth-root-socket-user=mysql'
     setup_db "$@"
-
     kill_server_for_init
   fi
 fi
 
 # TODO : edit configures
 # 1. skip-networking=false
-
 if [ "$1" = "mariadbd" ] ; then
   set -- $@  '--skip-networking=false'
 fi
