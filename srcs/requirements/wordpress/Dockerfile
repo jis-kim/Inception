@@ -7,7 +7,7 @@ RUN set -eux; \
     #echo "http://pkg.adfinis.com/alpine/v3.11/community" >> /etc/apk/repositories; \
     cat /etc/apk/repositories; \
     apk update; \
-    apk add --no-cache vim \
+    apk add --no-cache vim su-exec mariadb-client\
     php8 \
     php8-phar \
     php8-fpm \
@@ -41,8 +41,6 @@ RUN set -eux; \
 RUN set -eux; \
     #wget https://wordpress.org/wordpress-6.1.1.tar.gz; \
     wget "https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"; \
-    php --version \
-    php8 wp-cli.phar --info; \
     chmod +x wp-cli.phar; \
     mv wp-cli.phar /usr/local/bin/wp; \
     wp --info;

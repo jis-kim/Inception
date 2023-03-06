@@ -21,6 +21,12 @@ services:
       context: ./requirements/wordpress
     depends_on:
       - mariadb
+    environment:
+      WP_DB_HOST: ${WP_DB_HOST}
+      WP_DB_USER: ${MYSQL_USER}
+      WP_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WP_DB_NAME: ${WP_DB_NAME}
+      LOCALE: ${LOCALE}
     networks:
       - inception
     volumes:

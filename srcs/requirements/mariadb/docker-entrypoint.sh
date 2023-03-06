@@ -50,7 +50,7 @@ run_server_for_init() {
   local i
   # waiting server until timeout (30 seconds)
 	for i in `seq 0 30` ; do
-    echo $i th try
+    echo $i th try ...
 		if echo "SELECT 1" | exec_client --database=mysql; then
 			break
 		fi
