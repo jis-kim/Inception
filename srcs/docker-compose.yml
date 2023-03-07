@@ -9,13 +9,15 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_DATABASE: ${WP_DATABASE}
     networks:
       - inception
     volumes:
       - ${VOLUME_PATH}/mariadb:/var/lib/mysql
     expose:
       - "3306"
+    init: true
+    restart: on-failure
   wordpress:
     image: my-wordpress
     build:
@@ -23,30 +25,35 @@ services:
     depends_on:
       - mariadb
     environment:
+      DOMAIN_NAME: ${DOMAIN_NAME}
       WP_DB_HOST: ${WP_DB_HOST}
       WP_DB_USER: ${MYSQL_USER}
       WP_DB_PASSWORD: ${MYSQL_PASSWORD}
-      WP_DB_NAME: ${MYSQL_DATABASE}
-      LOCALE: ${LOCALE}
+      WP_DB_NAME: ${WP_DATABASE}
     networks:
       - inception
     volumes:
       - ${VOLUME_PATH}/wordpress:/wordpress
     expose:
       - "9000"
+    init: true
+    restart: on-failure
   nginx:
     image: my-nginx
     build:
       context: ./requirements/nginx
     depends_on:
       - mariadb
-    ports:
-      - "80:80"
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME}
     networks:
       - inception
     volumes:
       - ${VOLUME_PATH}/wordpress:/var/www/html
-
+    ports:
+      - "80:80"
+    init: true
+    restart: on-failure
 networks:
   inception:
     driver: bridge

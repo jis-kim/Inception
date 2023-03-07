@@ -4,7 +4,6 @@ FROM alpine:$VERSION
 
 RUN set -eux; \
     cat /etc/resolv.conf; \
-    #echo "http://pkg.adfinis.com/alpine/v3.11/community" >> /etc/apk/repositories; \
     cat /etc/apk/repositories; \
     apk update; \
     apk add --no-cache vim su-exec mariadb-client\
@@ -23,8 +22,8 @@ RUN set -eux; \
     php8-mysqli \
     php8-imap \
     # mysqli or pdo 선택
-    php8-pdo \
-    php8-pdo_mysql \
+    #php8-pdo \
+    #php8-pdo_mysql \
     php8-soap \
     #php8-xmlrpc \ - php8 에서 안되는 패키지 2개
     #php8-mcrypt \
@@ -52,4 +51,4 @@ VOLUME /wordpress
 EXPOSE 9000
 
 ENTRYPOINT [ "docker-entrypoint.sh" ]
-CMD [ "php-fpm8" ]
+CMD [ "php-fpm8", "-F" ]

@@ -23,12 +23,9 @@ if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ]; then
 
   if [ "$(id -u)" = '0' ]; then
     exec su-exec mysql "$0" "$@"
-    # 아 그냥 같은 스크립트 다시 실행하는 거임 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ 이걸 왤케 나중에 하지?
-    # 뭔가 환경변수 같은 것도 설정 가능하도록 하는 듯?
   fi
   mysql_install_db --datadir="/var/lib/mysql/" --auth-root-socket-user=mysql
 
 fi
 
 exec "${@}" # 확장성 - COMMAND
-#/bin/sh

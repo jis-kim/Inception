@@ -62,14 +62,6 @@ run_server_for_init() {
   logger_info "Connected to server successfully!"
 }
 
-#sql_escape_string_literal() {
-#  local newline=$'\n' # real newline
-#	local escaped=${1//\\/\\\\}
-#  echo $escaped
-#	escaped="${escaped//$newline/\\n}"
-#	echo "${escaped//\'/\\\'}"
-#}
-
 setup_db() {
   run_server_for_init "$@"
 
@@ -77,11 +69,11 @@ setup_db() {
   # true 로 종료 방지
   # heredoc 은 envriotment variable 을 인식하지 못하므로 read(stdin 에서 한 줄 읽음) 로 한 번 변환.
   read -r -d '' createUsers <<-EOSQL || true
+    CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE} ;
     CREATE USER 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}' ;
     GRANT ALL ON *.* TO 'root'@'%' WITH GRANT OPTION ;
     CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}' ;
-    GRANT ALL ON *.* TO '${MYSQL_USER}'@'%' WITH GRANT OPTION ;
-    CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE} ;
+    GRANT ALL ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%' WITH GRANT OPTION ;
 	EOSQL
 
   exec_client --database=mysql --binary-mode <<-EOSQL
@@ -116,7 +108,6 @@ if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ]; then
     find "${SOCKET%/*}" -maxdepth 0 \! -user mysql -exec chown mysql: '{}' \;
     # chown -R mysql:mysql ${DATADIR} /var/run/mysqld
     # 얘는 안에 있는 모든 file 을 재귀적으로(-R) 권한바꿈.
-    # user를 mysql 로 변경하여 현재 스크립트를 재실행한다.
     exec su-exec mysql "$0" "$@"
   fi
 

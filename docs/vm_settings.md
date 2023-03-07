@@ -90,3 +90,10 @@ sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plug
 sudo usermod -aG docker $USER
 newgrp docker
 ```
+## Settings for wordpress
+
+1. /etc/hosts 에 resolve 할 url 추가
+``` bash
+su -
+echo "127.0.0.1 jiskim.42.fr" >> /etc/hosts
+```

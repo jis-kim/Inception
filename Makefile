@@ -14,45 +14,53 @@ PRE_BUILD = --build
 SRCS_DIR = ./srcs
 COMPOSE_FILE = $(SRCS_DIR)/docker-compose.yml
 
+COMPOSE_CMD = $(DOCKER_COMPOSE) -f $(COMPOSE_FILE)
+
 NAME = inception
 
 COMPILE_MSG	= @echo $(BOLD)$(L_PURPLE) 📣 $(NAME) Compiled 🥳$(RESET)
 
-
 .PHONY : all
 all :
-	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) $(COMPOSE_UP) -d $(PRE_BUILD)
+	@$(COMPOSE_CMD) $(COMPOSE_UP) -d $(PRE_BUILD)
 
 .PHONY : clean
 clean :
-	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) $(COMPOSE_DOWN) --remove-orphans
-	@sudo rm -rf $(HOME)/data
+	@$(COMPOSE_CMD) $(COMPOSE_DOWN) --remove-orphans
 	@echo $(BOLD)$(L_RED) 🗑️ Removed all docker composed containers$(RESET)
 
 .PHONY : fclean
 fclean : clean
-	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) $(COMPOSE_STOP)
-	@echo $(BOLD)$(L_PURPLE) 🗑️ stopped running containers! 📚$(RESET)
+	@sudo rm -rf $(HOME)/data
+	@echo $(BOLD)$(L_PURPLE) 🗑️ Removed volume data $(RESET)
 
 .PHONY : re
 re : fclean
 	@make all
 
+.PHONY : stop
+stop :
+	@$(COMPOSE_CMD) $(COMPOSE_STOP)
+
+.PHONY : build
 build :
-	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) $(COMPOSE_BUILD) $(BUILD_FLAGS)
+	@$(COMPOSE_CMD) $(COMPOSE_BUILD) $(BUILD_FLAGS)
 
 .PHONY : ps
 ps :
-	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) ps
+	@$(COMPOSE_CMD) ps
 
+.PHONY : exec
 exec :
-	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) exec $(S) /bin/sh
+	@$(COMPOSE_CMD) exec $(S) /bin/sh
 
+.PHONY : logs
 logs :
-	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) logs $(S)
+	@$(COMPOSE_CMD) logs $(S)
 
+.PHONY : top
 top :
-	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) top $(S)
+	@$(COMPOSE_CMD) top $(S)
 
 ######################### Color #########################
 GREEN="\033[32m"
