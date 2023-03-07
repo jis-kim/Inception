@@ -6,7 +6,7 @@
   - `username ALL=(ALL) NOPASSWD:ALL` 추가
   - `NOPASSWD` 로 `sudo` 커맨드 사용 시 패스워드를 입력하지 않아도 된다.
 - `apt-get update`
-- `apt-get install -y git vim sudo curl fonts-nanum`
+- `apt-get install -y git vim sudo curl fonts-nanum ssh`
   - fonts-nanum : 한글 폰트 설치
 
 ## 호스트 머신과 클립보드 공유
