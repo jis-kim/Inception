@@ -2,17 +2,16 @@
 set -euo pipefail # -x for debugging
 
 logger_info() {
+  echo -e "\033[32m"
   echo "[$(date +'%Y-%m-%d %H:%M:%S')] [INFO] $@"
+  echo -e "\033[0m"
 }
 
 logger_error() {
+  echo -e "\033[31m"
   echo "[$(date +'%Y-%m-%d %H:%M:%S')] [ERROR] $@" >&2
+  echo -e "\033[0m"
   exit 1
-}
-
-print_configs() {
-  local conf="$1"; shift
-  "$@" "--verbose" "--help" 2>/dev/null | grep "^$conf"
 }
 
 check_db_exists() {
@@ -23,8 +22,8 @@ check_db_exists() {
 }
 
 check_minimum_env() {
-  if [ -z $MYSQL_ROOT_PASSWORD ] || [ -z $MYSQL_USER ] || [ -z $MYSQL_PASSWORD ]; then
-    logger_error 'database is uninitialized and password option is not specified '
+  if [ -z "$MYSQL_ROOT_PASSWORD" ] || [ -z "$MYSQL_USER" ] || [ -z "$MYSQL_PASSWORD" ]; then
+    logger_error 'database is uninitialized and password option is not specified'
   fi
 }
 
@@ -81,15 +80,9 @@ setup_db() {
 	EOSQL
 }
 
-#if [ "${1:0:1}" = '-' ]; then
-#  set -- mariadbd "$@"
-#fi
-#if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ] && ! _mysql_want_help "$@"; then
 if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ]; then
   echo "Entrypoint script for MariaDB Server started."
 
-  print_configs 'datadir' "$@"
-  print_configs 'socket' "$@"
   # TODO : datadir, socket extract logic
   DATADIR="/var/lib/mysql/"
   SOCKET="/var/run/mysqld/mysqld.sock"
@@ -98,7 +91,7 @@ if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ]; then
   # root
   if [ "$(id -u)" = '0' ]; then
     # 이미 존재..하지 않으면 삭제.
-    if [ -z $DATABASE_ALREADY_EXISTS ]; then
+    if [ -z "$DATABASE_ALREADY_EXISTS" ]; then
       rm -rf "${DATADIR}*"
     fi
     mkdir -p "$DATADIR" "${SOCKET%/*}"
@@ -122,10 +115,5 @@ if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ]; then
   fi
 fi
 
-# TODO : edit configures
-# 1. skip-networking=false
-if [ "$1" = "mariadbd" ] ; then
-  set -- $@  '--skip-networking=false'
-fi
 
 exec "$@"

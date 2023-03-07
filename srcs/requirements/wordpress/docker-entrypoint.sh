@@ -15,14 +15,14 @@ logger_error() {
 }
 
 check_minimum_env() {
-    if [ -z $WP_DB_HOST ] || [ -z $WP_DB_NAME  ] || [ -z $WP_DB_USER ] || [ -z $WP_DB_PASSWORD ] \
-     || [ -z $WP_ADMIN_USER ] || [ -z $WP_ADMIN_PASSWORD ] || [ -z $WP_ADMIN_EMAIL ] ; then
+    if [ -z "$WP_DB_HOST" ] || [ -z "$WP_DB_NAME " ] || [ -z "$WP_DB_USER" ] || [ -z "$WP_DB_PASSWORD" ] \
+     || [ -z "$WP_ADMIN_USER" ] || [ -z "$WP_ADMIN_PASSWORD" ] || [ -z $WP_ADMIN_EMAIL" ] ; then
         logger_error "error: missing required environment variable.\n" \
         "Please check your .env file and make sure you have set all required variables."
     fi
 }
 
-if [ "$1" = 'php8-fpm' ]; then
+if [ "$1" = 'php-fpm8' ]; then
     if [ "$(id -u)" = '0' ]; then
         find /wordpress \! -user nobody -exec chown nobody '{}' +
         cd /wordpress && exec su-exec nobody "$0" "$@"
