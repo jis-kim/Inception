@@ -56,7 +56,7 @@ exec :
 
 .PHONY : logs
 logs :
-	@$(COMPOSE_CMD) logs $(S)
+	@$(COMPOSE_CMD) logs -f $(S)
 
 .PHONY : top
 top :

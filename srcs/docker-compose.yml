@@ -30,6 +30,8 @@ services:
       WP_DB_USER: ${MYSQL_USER}
       WP_DB_PASSWORD: ${MYSQL_PASSWORD}
       WP_DB_NAME: ${WP_DATABASE}
+      WP_USER: ${WP_USER}
+      WP_PASSWORD: ${WP_PASSWORD}
     networks:
       - inception
     volumes:
