@@ -2,15 +2,11 @@
 set -euo pipefail # -x for debugging
 
 logger_info() {
-  echo -e "\033[32m"
   echo "[$(date +'%Y-%m-%d %H:%M:%S')] [INFO] $@"
-  echo -e "\033[0m"
 }
 
 logger_error() {
-  echo -e "\033[31m"
   echo "[$(date +'%Y-%m-%d %H:%M:%S')] [ERROR] $@" >&2
-  echo -e "\033[0m"
   exit 1
 }
 

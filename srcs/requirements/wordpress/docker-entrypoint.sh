@@ -39,7 +39,7 @@ if [ "$1" = 'php-fpm8' ]; then
     fi
     if ! wp core is-installed ; then
         logger_info "installing wordpress..."
-        wp core install --url="${DOMAIN_NAME}" --title="blog_title" \
+        wp core install --url="${DOMAIN_NAME}" --title="인셉션쇼로숑숑" \
         --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} \
         --admin_email=${WP_ADMIN_EMAIL} --skip-email
         wp user create ${WP_USER} ${WP_USER}@${DOMAIN_NAME} --user_pass=${WP_PASSWORD}
