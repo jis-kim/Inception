@@ -4,16 +4,19 @@ FROM alpine:$VERSION
 
 RUN set -eux; \
     apk update; \
-    apk add --no-cache vim nginx; \
+    apk add --no-cache vim openssl nginx; \
     rm -rf /var/cache/apk/*; \
     rm -rf /var/lib/apk/lists/*; \
-    cat /etc/nginx/nginx.conf;
+    openssl genrsa -out /private.key; \
+    openssl req -new -key /private.key -out server.csr -subj "/"; \
+    openssl x509 -req -days 365 -in server.csr -signkey private.key -out server.crt;
+
 
 VOLUME /var/www/html
 
 COPY default.conf /etc/nginx/http.d/default.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
-EXPOSE 80
+EXPOSE 443
 
 ENTRYPOINT [ "nginx", "-g", "daemon off;" ]

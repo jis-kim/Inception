@@ -16,7 +16,7 @@ logger_error() {
 
 check_minimum_env() {
     if [ -z "$WP_DB_HOST" ] || [ -z "$WP_DB_NAME " ] || [ -z "$WP_DB_USER" ] || [ -z "$WP_DB_PASSWORD" ] \
-     || [ -z "$WP_ADMIN_USER" ] || [ -z "$WP_ADMIN_PASSWORD" ] || [ -z $WP_ADMIN_EMAIL" ] ; then
+     || [ -z "$WP_ADMIN_USER" ] || [ -z "$WP_ADMIN_PASSWORD" ] || [ -z "$WP_ADMIN_EMAIL" ] ; then
         logger_error "error: missing required environment variable.\n" \
         "Please check your .env file and make sure you have set all required variables."
     fi

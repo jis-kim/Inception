@@ -56,7 +56,7 @@ services:
     volumes:
       - ${VOLUME_PATH}/wordpress:/var/www/html
     ports:
-      - "80:80"
+      - "443:443"
     init: true
     restart: on-failure
 networks:
