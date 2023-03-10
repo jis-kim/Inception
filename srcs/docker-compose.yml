@@ -2,6 +2,7 @@
 
 services:
   mariadb:
+    container_name: mariadb
     image: my-mariadb
     build:
       context: ./requirements/mariadb
@@ -19,6 +20,7 @@ services:
     init: true
     restart: on-failure
   wordpress:
+    container_name: wordpress
     image: my-wordpress
     build:
       context: ./requirements/wordpress
@@ -44,6 +46,7 @@ services:
     init: true
     restart: on-failure
   nginx:
+    container_name: nginx
     image: my-nginx
     build:
       context: ./requirements/nginx
@@ -57,8 +60,10 @@ services:
       - ${VOLUME_PATH}/wordpress:/var/www/html
     ports:
       - "443:443"
+      - "80:80"
     init: true
     restart: on-failure
 networks:
   inception:
+    name: inception
     driver: bridge

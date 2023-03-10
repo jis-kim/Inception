@@ -2,11 +2,15 @@
 set -euo pipefail # -x for debugging
 
 logger_info() {
+  printf "\033[32m"
   echo "[$(date +'%Y-%m-%d %H:%M:%S')] [INFO] $@"
+  printf "\033[0m"
 }
 
 logger_error() {
+  printf "\033[31m"
   echo "[$(date +'%Y-%m-%d %H:%M:%S')] [ERROR] $@" >&2
+  printf "\033[0m"
   exit 1
 }
 
@@ -79,7 +83,6 @@ setup_db() {
 if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ]; then
   echo "Entrypoint script for MariaDB Server started."
 
-  # TODO : datadir, socket extract logic
   DATADIR="/var/lib/mysql/"
   SOCKET="/var/run/mysqld/mysqld.sock"
   check_db_exists
@@ -101,7 +104,6 @@ if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ]; then
   fi
 
   check_minimum_env
-
   if [ -z $DATABASE_ALREADY_EXISTS ]; then
     # mysql user 를 auth-root-socket-user 로 생성해서 바로 접속가능.
     mysql_install_db --datadir="${DATADIR}"\
