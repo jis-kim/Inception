@@ -1,1 +1,4 @@
-node_modules
+*
+!default.conf
+!nginx.conf
+!docker-entrypoint.sh
