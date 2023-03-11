@@ -20,7 +20,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 VOLUME /var/www/html
-EXPOSE 80 443
+EXPOSE 443
 
 ENTRYPOINT [ "docker-entrypoint.sh" ]
 CMD [ "nginx", "-g", "daemon off;" ]
