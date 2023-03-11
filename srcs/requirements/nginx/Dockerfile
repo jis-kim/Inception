@@ -3,11 +3,10 @@ FROM alpine:$VERSION
 
 ENV TZ=Asia/Seoul
 
-RUN set -eux; \
+RUN set -e; \
     apk update; \
     apk add --no-cache su-exec vim tzdata && \
-    cp /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
-    apk del tzdata
+    cp /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN set -e; \
     apk add --no-cache openssl nginx && \

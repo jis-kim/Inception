@@ -1,5 +1,5 @@
 #!/bin/sh
-set -euo pipefail # -x for debugging
+set -eo pipefail # -x for debugging
 
 logger_info() {
   printf "\033[32m"
@@ -63,7 +63,8 @@ run_server_for_init() {
 
 setup_db() {
   run_server_for_init "$@"
-
+  logger_info "Initializing database ..."
+  #mysql_tzinfo_to_sql '/usr/share/zoneinfo/Asia/Seoul' 'Asia/Seoul' | mysql --database=mysql
   local createUsers=
   # true 로 종료 방지
   # heredoc 은 envriotment variable 을 인식하지 못하므로 read(stdin 에서 한 줄 읽음) 로 한 번 변환.
@@ -75,7 +76,7 @@ setup_db() {
     GRANT ALL ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%' WITH GRANT OPTION ;
 	EOSQL
 
-  exec_client --database=mysql --binary-mode <<-EOSQL
+  exec_client --binary-mode <<-EOSQL
     ${createUsers}
 	EOSQL
 }
@@ -89,29 +90,24 @@ if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ]; then
 
   # root
   if [ "$(id -u)" = '0' ]; then
-    # 이미 존재..하지 않으면 삭제.
     if [ -z "$DATABASE_ALREADY_EXISTS" ]; then
       rm -rf "${DATADIR}*"
     fi
     mkdir -p "$DATADIR" "${SOCKET%/*}"
-    # 무조건 바꾸는 게 아니라 소유자가 mysql 이 아닌 파일들만 찾아서 권한을 바꾼다.
+    # 소유자가 mysql 이 아닌 파일들만 찾아서 권한을 바꾼다.
     find "${DATADIR}" \! -user mysql -exec chown mysql: '{}' +
     # /var/run/mysqld 의 권한만 바꾼다.
     find "${SOCKET%/*}" -maxdepth 0 \! -user mysql -exec chown mysql: '{}' \;
-    # chown -R mysql:mysql ${DATADIR} /var/run/mysqld
-    # 얘는 안에 있는 모든 file 을 재귀적으로(-R) 권한바꿈.
     exec su-exec mysql "$0" "$@"
   fi
 
   check_minimum_env
-  if [ -z $DATABASE_ALREADY_EXISTS ]; then
-    # mysql user 를 auth-root-socket-user 로 생성해서 바로 접속가능.
+  if [ -z "$DATABASE_ALREADY_EXISTS" ]; then
     mysql_install_db --datadir="${DATADIR}"\
      '--skip-test-db' '--auth-root-socket-user=mysql'
     setup_db "$@"
     kill_server_for_init
   fi
 fi
-
 
 exec "$@"

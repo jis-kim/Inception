@@ -1,5 +1,5 @@
 #!/bin/sh
-set -euo pipefail
+set -eo pipefail
 
 logger_info() {
   printf "\033[32m"
