@@ -82,7 +82,7 @@ setup_db() {
 }
 
 if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ]; then
-  echo "Entrypoint script for MariaDB Server started."
+  logger_info "Entrypoint script for MariaDB Server started."
 
   DATADIR="/var/lib/mysql/"
   SOCKET="/var/run/mysqld/mysqld.sock"
@@ -103,11 +103,15 @@ if [ "$1" = 'mariadbd' ] || [ "$1" = 'mysqld' ]; then
 
   check_minimum_env
   if [ -z "$DATABASE_ALREADY_EXISTS" ]; then
+    logger_info "Initializing database ..."
     mysql_install_db --datadir="${DATADIR}"\
      '--skip-test-db' '--auth-root-socket-user=mysql'
     setup_db "$@"
     kill_server_for_init
+  else
+    logger_info "Database already exists."
   fi
 fi
 
+logger_info "Starting $@ ..."
 exec "$@"
