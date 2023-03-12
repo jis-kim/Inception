@@ -1,9 +1,9 @@
-#version: "3.0" # deprecated
+version: "3.9" # deprecated
 
 services:
   mariadb:
     container_name: mariadb
-    image: my-mariadb
+    image: mariadb
     build:
       context: ./requirements/mariadb
     environment:
@@ -14,14 +14,14 @@ services:
     networks:
       - inception
     volumes:
-      - ${VOLUME_PATH}/mariadb:/var/lib/mysql
+      - dbdata:/var/lib/mysql
     expose:
       - "3306"
     init: true
     restart: on-failure
   wordpress:
     container_name: wordpress
-    image: my-wordpress
+    image: wordpress
     build:
       context: ./requirements/wordpress
     depends_on:
@@ -40,14 +40,14 @@ services:
     networks:
       - inception
     volumes:
-      - ${VOLUME_PATH}/wordpress:/wordpress
+      - wpdata:/wordpress
     expose:
       - "9000"
     init: true
     restart: on-failure
   nginx:
     container_name: nginx
-    image: my-nginx
+    image: nginx
     build:
       context: ./requirements/nginx
     depends_on:
@@ -57,7 +57,7 @@ services:
     networks:
       - inception
     volumes:
-      - ${VOLUME_PATH}/wordpress:/var/www/html
+      - wpdata:/var/www/html
     ports:
       - "443:443"
     init: true
@@ -66,3 +66,18 @@ networks:
   inception:
     name: inception
     driver: bridge
+volumes:
+  dbdata:
+    name: dbdata
+    driver: local # default
+    driver_opts:
+      type: none
+      device: ${VOLUME_PATH}/mariadb # 볼륨 저장 위치
+      o: bind # `mount` 커맨드에 전달됨.
+  wpdata:
+    name: wpdata
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_PATH}/wordpress
+      o: bind

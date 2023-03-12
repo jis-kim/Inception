@@ -22,15 +22,17 @@ COMPILE_MSG	= @echo $(BOLD)$(L_PURPLE) 📣 $(NAME) Compiled 🥳$(RESET)
 
 .PHONY : all
 all :
+	mkdir -p $(HOME)/data/mariadb $(HOME)/data/wordpress
 	@$(COMPOSE_CMD) $(COMPOSE_UP) -d $(PRE_BUILD)
 
 .PHONY : clean
 clean :
-	@$(COMPOSE_CMD) $(COMPOSE_DOWN) --remove-orphans
+	$(COMPOSE_CMD) $(COMPOSE_DOWN)
 	@echo $(BOLD)$(L_RED) 🗑️ Removed all docker composed containers$(RESET)
 
 .PHONY : fclean
 fclean : clean
+	$(COMPOSE_CMD) $(COMPOSE_DOWN) -v
 	@sudo rm -rf $(HOME)/data
 	@echo $(BOLD)$(L_PURPLE) 🗑️ Removed volume data $(RESET)
 
