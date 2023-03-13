@@ -301,41 +301,6 @@ Docker desktop 은 작은 vm 에서 실행되므로 맥에서 확인할 수 없�
 
 지우는 것도 똑같이 반영됨.
 
-바인드 마운트를 사용해서 소프트웨어 개발 해보자~
-
-## Run your app in a development container
-
-- 소스코드를 컨테이너로 마운트 하기
-- 모든 디펜던시 설치
-- `nodemon` 시작하기 → filesystem change 감시
-
-고~~
-
-```bash
-docker run -dp 3000:3000 \
-    -w /app --mount type=bind,src="$(pwd)",target=/app \
-    node:18-alpine \
-    sh -c "yarn install && yarn run dev"
-```
-
-- `-w /app` : working directory 나 커맨드가 실행될 현재 디렉토리를 실행.
-- `--mount type=bind, src="$(pwd)",target=/app` : 현재 디렉토리를 container 의 `/app` 디렉토리로 바인드 마운트.
-- `node:18-alpine` : 사용할 이미지.
-- 알파인은 `bash` 가 없으므로 `sh` 로 `yarn install && yarn run dev` 한다. (`package.json` 보셈)
-
-    ```json
-    "scripts": {
-      "prettify": "prettier -l --write \"**/*.js\"",
-      "test": "jest",
-      "dev": "nodemon src/index.js"
-    },
-    ```
-
-
-- host 에서 바꾸면 이렇게 restart 해준다.
-
-    ![Screenshot 2023-02-06 at 6.34.58 PM.png](pics/docker_simple/Screenshot_2023-02-06_at_6.34.58_PM.png)
-
 
 ## 마운트 종류
 
@@ -503,8 +468,6 @@ docker run -d \
      mysql:8.0
 ```
 
-일케하면 된다용~
-
 자동으로 `todo-sql-data` 라는 볼륨을 만들어준다. 스마트한걸?
 
 ![Screenshot 2023-02-07 at 10.13.05 PM.png](pics/docker_simple/Screenshot_2023-02-07_at_10.13.05_PM.png)
@@ -623,8 +586,8 @@ docker run -dp 3000:3000 \
 
     ```yaml
     services:
-    	app:
-    		image: node:18:alpine
+      app:
+        image: node:18:alpine
     ```
 
 2. `image` 와 `command` 의 순서는 상관이 없다.
@@ -640,11 +603,11 @@ docker run -dp 3000:3000 \
 
     ```yaml
     services:
-    	app:
-    		image: node:18-alpine
-    		command: sh -c "yarn install && yarn run dev"
-    		ports:
-    			- 3000:3000
+      app:
+        image: node:18-alpine
+        command: sh -c "yarn install && yarn run dev"
+        ports:
+          - 3000:3000
     ```
 
 4. 볼륨 매핑 (얘도 길고 짧은 버전 두 개 있음) 과 working directory 설정
@@ -686,24 +649,6 @@ docker run -dp 3000:3000 \
           MYSQL_DB: todos
     ```
 
-
-## mysql 도 똑같이 해보기
-
-```yaml
-services:
-  app:
-    # The app service definition
-  mysql:
-    image: mysql:8.0
-    volumes:
-      - todo-mysql-data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: todos
-
-volumes:
-  todo-mysql-data:
-```
 
 - `docker run` 하면 named volume 이 자동 생성 되는데 Compose 에서는 그러지 않는다. `volumes:` 의 top-level 에 볼륨을 지정해준다.
 
@@ -799,47 +744,7 @@ Image history 를 다시 보면 각 커맨드가 이미지의 새 레이어가 �
 
     ![Screenshot 2023-02-08 at 5.17.57 PM.png](pics/docker_simple/Screenshot_2023-02-08_at_5.17.57_PM.png)
 
-
-## Maven/Tomcat 예제
-
-Java 코드를 Java 바이트 코드로 컴파일 하려면 JDK 가 필요한데 JDK 는 production 에 불필요하다. Maven/Gradle 로 빌드하는데 얘도 최종 이미지엔 필요 없다!! 다단계 빌드 고고
-
-```docker
-# syntax=docker/dockerfile:1
-FROM maven AS build
-WORKDIR /app
-COPY . .
-RUN mvn package
-
-FROM tomcat
-COPY --from=build /app/target/file.war /usr/local/tomcat/webapps
-```
-
-Maven 을 이용한 실제 빌드에는 한 단계만 필요하다. - `build`
-
-두 번째 단계에서  (`FROM tomcat`) `build` 에 있는 파일을 복사한다. 최종 이미지는 생성되는 마지막 단계이다. (--target 플래그를 사용하여 재정의할 수 있음) 먼소리?
-
-## React example
-
-Node environment 가 JS 코드 (보통 JSX) + SASS + static HTML + JS + CSS 를 컴파일 할 때 필요하다. ssr 안할 때는 Node 필요 없다!
-
-```docker
-# syntax=docker/dockerfile:1
-FROM node:18 AS build
-WORKDIR /app
-COPY package* yarn.lock ./
-RUN yarn install
-COPY public ./public
-COPY src ./src
-RUN yarn run build
-
-FROM nginx:alpine
-COPY --from=build /app/build /usr/share/nginx/html
-```
-
-node:18 이미지로 빌드하고 결과물을 nginx container 로 카피한다.
-
-전체 이미지 사이즈를 줄이고 빌드 시간 종속성과 런타임 종속성을 분리해서 최종 컨테이너 보안을 강화한다.
+  - 전체 이미지 사이즈를 줄이고 빌드 시간 종속성과 런타임 종속성을 분리해서 최종 컨테이너 보안을 강화한다.
 
 # Docker and OCI Runtime
 
